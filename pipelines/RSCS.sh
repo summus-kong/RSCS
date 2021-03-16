@@ -2,13 +2,13 @@
 # set -e
 # set -u
 # set -o pipefail
-#
-# Description: 
-# 	      RSCS:RNA-seq and small RNA-seq combined strategy.
-# 	      This is a newly cpmputational pipeline to predict mouse transcripts. 
-#
-# Please confirm you hvae installed fastqc,multiqc,trim_galore,hisat2,samtools
-# Please confrim your fastq file have pre-processed except triming adaptor
+##
+## Description: 
+## 	      RSCS:RNA-seq and small RNA-seq combined strategy.
+##	      This is a newly cpmputational pipeline to predict mouse transcripts. 
+##
+## Please confirm you hvae installed fastqc,multiqc,trim_galore,hisat2,samtools
+## Please confrim your fastq file have pre-processed except triming adaptor
 
 usage()
 {
@@ -51,6 +51,7 @@ OPTIONS:
 EOF
 }
 
+
 if [ "$#" -lt 1 ]
 then
         usage
@@ -68,6 +69,7 @@ meta=
 outputdir=
 name_r="RNA_seq"
 name_s="small_RNA_seq"
+
 GETOPT_ARGS=`getopt -o h:r:s:e:p:k:m:o: -al help:,rnaseq_dir:,srnaseq_dir:,reference:,threads:,kmer:,meta_data:,outputdir:,single_or_pairedr:,single_or_paireds:, -- "$@"`
 eval set -- "$GETOPT_ARGS"
 while [ -n $1 ] 
@@ -135,6 +137,7 @@ else
 	k=5
 fi
 
+# get absolute path
 rnaseq_dir=$(echo `cd $rnaseq_dir; pwd`)
 srnaseq_dir=$(echo `cd $srnaseq_dir; pwd`)
 outputdir=$(echo `cd $outputdir; pwd`)
@@ -162,10 +165,10 @@ if [[ $outputdir = */ ]]
 then
         outputdir=${outputdir%?}
 fi
+
 ####################################################
 # Create dirctory needed
 ####################################################
-
 dir=`pwd`
 echo "check if the folder exists, or create a folder if it doesn't"
 
@@ -182,6 +185,8 @@ then
 	fi
 fi
 }
+
+
 mkd clean_out
 mkd bam_out
 mkd merge_bam_out
@@ -193,7 +198,7 @@ echo " "
 
 suff()
 {
-# suffix
+# get file suffix
 suffix=
 ls $1/*fastq >/dev/null 2>&1
 if [[ $? -eq 0 ]]
@@ -218,6 +223,8 @@ fi
 
 echo $suffix
 }
+
+
 ####################################################
 # FASTQC
 ####################################################
@@ -234,12 +241,14 @@ do
 done
 multiqc $1/fastqc -o $1/fastqc
 }
+
+
 fastqc $rnaseq_dir
 fastqc $srnaseq_dir
+
 ####################################################
 # Trim
 ####################################################
-
 trim_rs()
 {
 ## RNA-seq
@@ -295,6 +304,7 @@ then
 	rm rna.config
 fi
 }
+
 
 trim_srs()
 {
@@ -353,6 +363,7 @@ then
 fi
 }
 
+
 if [ -n "$outputdir" ]
 then
         if [ -n "$rnaseq_dir" ]
@@ -372,7 +383,6 @@ fi
 ####################################################
 # align to genome 
 ####################################################
-
 aligndir()
 {
 a=$(pwd)
@@ -386,10 +396,15 @@ then
 	od=srna
 fi
 }
+
+
+# check hisat2 index 
 ls $refdir/*ht2 >/dev/null 2>&1
-if [[ $? -eq 0 ]]
+if [[ $? -ne 0 ]]
 then
 	hisat2-build $refdir/$refname $refdir/genome
+fi
+
 align()
 {
 # align to genome through hisat2
@@ -447,6 +462,7 @@ then
 fi
 }
 
+
 his_rs_sam2bam()
 {
 # determine if the folder exists
@@ -472,6 +488,7 @@ else
 	echo "dirctory $dir_co/rna is not exist or file format in this dir is not correct"
 fi
 }
+
 
 his_srs_sam2bam()
 {
@@ -531,6 +548,7 @@ then
         done
 fi
 }
+
 
 if [ -n "$meta" ] && [ -n "$outputdir" ]
 then
