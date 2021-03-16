@@ -7,7 +7,7 @@
 # 	      RSCS:RNA-seq and small RNA-seq combined strategy.
 # 	      This is a newly cpmputational pipeline to predict mouse transcripts. 
 #
-# Please confirm you hvae installed trim_galore,hisat2,samtools
+# Please confirm you hvae installed fastqc,multiqc,trim_galore,hisat2,samtools
 # Please confrim your fastq file have pre-processed except triming adaptor
 
 usage()
@@ -189,9 +189,6 @@ mkd merge_bam_out
 dir_co=$outputdir/clean_out
 dir_b=$outputdir/bam_out
 dir_m=$outputdir/merge_bam_out
-#############################################
-# trim 
-#############################################
 echo " "
 
 suff()
@@ -221,6 +218,27 @@ fi
 
 echo $suffix
 }
+#############################################
+# FASTQC
+#############################################
+fastqc()
+{
+suffix=$(suff $1)
+if [ ! -e $1/fastqc ] && [ ! -d $1/fastqc ]
+then
+	mkdri $1/fastqc
+fi
+for i in `ls $1/*$suffix`
+do
+	fastqc $i -o $1/fastqc -t $p
+done
+multiqc $1/fastqc -o $1/fastqc
+}
+fastqc $rnaseq_dir
+fastqc $srnaseq_dir
+#############################################
+# Trim
+#############################################
 
 trim_rs()
 {
