@@ -5,11 +5,12 @@
 ##
 ## Description: 
 ## 	      RSCS:RNA-seq and small RNA-seq combined strategy.
-##	      This is a newly cpmputational pipeline to predict mouse transcripts. 
+##	      This is a newly cpmputational pipeline to perform transcriptome annotation in a wide variety of mammalian samples. 
 ##
-## Please confirm you hvae installed fastqc,multiqc,trim_galore,hisat2,samtools
-## Please confrim your fastq file have pre-processed except triming adaptor
+## Confirm you hvae installed fastqc,multiqc,trim_galore,hisat2,samtools
+## Confrim your fastq file have pre-processed
 
+# function for help output
 usage()
 {
 sc=$(basename $0 .sh)
@@ -58,6 +59,7 @@ then
 	exit 0
 fi
 
+# define input arguments 
 rnaseq_dir=
 srnaseq_dir=
 ref=
@@ -130,6 +132,7 @@ then
 else
 	p=1
 fi
+
 if [ -n "$k" ]
 then
 	echo ""
@@ -145,6 +148,7 @@ refdir=$(dirname $ref)
 refname=$(basename $ref)
 refdir=$(echo `cd $refdir;pwd`)
 
+# print critical arguments
 echo "======================================"
 echo -e "your specific parameters:\n"
 echo -e "RNA-seq_dir = $rnaseq_dir\n"
@@ -152,23 +156,25 @@ echo -e "Small RNA-seq_dir = $srnaseq_dir\n"
 echo -e "reference genome = $ref\n"
 echo -e "output_dir = $outputdir\n"
 echo -e "k = $k\n"
+echo "======================================"
 
+# change path format
 if [[ $rnaseq_dir = */ ]]
 then
 	rnaseq_dir=${rnaseq_dir%?}
 fi
+
 if [[ $srnaseq_dir = */ ]]
 then
         srnaseq_dir=${srnaseq_dir%?}
 fi
+
 if [[ $outputdir = */ ]]
 then
         outputdir=${outputdir%?}
 fi
 
-####################################################
-# Create dirctory needed
-####################################################
+# create dirctory needed
 dir=`pwd`
 echo "check if the folder exists, or create a folder if it doesn't"
 
@@ -191,11 +197,13 @@ mkd clean_out
 mkd bam_out
 mkd merge_bam_out
 
+# define path for result output
 dir_co=$outputdir/clean_out
 dir_b=$outputdir/bam_out
 dir_m=$outputdir/merge_bam_out
 echo " "
 
+# function for checking fastq file suffix
 suff()
 {
 # get file suffix
@@ -205,18 +213,21 @@ if [[ $? -eq 0 ]]
 then
         suffix="fastq"
 fi
+
 ls $1/*fq >/dev/null 2>&1
 if [[ $? -eq 0 ]]
 then
         suffix="fq"
 fi
+
 ls $1/*fastq.gz >/dev/null 2>&1
 if [[ $? -eq 0 ]]
 then
         suffix="fastq.gz"
 fi
-ls $1/*fq.gz >/dev/null 2>&1
-if [[ $? -eq 0 ]]
+
+ls $1/*fq.gz >/dev/null 2>&1if [[ $? -eq 0 ]]
+
 then
         suffix="fq.gz"
 fi
@@ -224,10 +235,10 @@ fi
 echo $suffix
 }
 
+####################################################
+# FastQC
+####################################################
 
-####################################################
-# FASTQC
-####################################################
 fastqc()
 {
 suffix=$(suff $1)
@@ -235,6 +246,7 @@ if [ ! -e $1/fastqc ] && [ ! -d $1/fastqc ]
 then
 	mkdri $1/fastqc
 fi
+
 for i in `ls $1/*$suffix`
 do
 	fastqc $i -o $1/fastqc -t $p
@@ -247,8 +259,9 @@ fastqc $rnaseq_dir
 fastqc $srnaseq_dir
 
 ####################################################
-# Trim
+# Trim Adapter
 ####################################################
+
 trim_rs()
 {
 ## RNA-seq
@@ -261,6 +274,7 @@ else
         echo "create dirctory $dir_co/rna"
         mkdir rna
 fi
+
 cd $dir
 
 suffix=$(suff $rnaseq_dir)
@@ -318,6 +332,7 @@ else
         echo "create dirctory $dir_co/srna"
         mkdir srna
 fi
+
 cd $dir
 
 suffix=$(suff $srnaseq_dir)
@@ -363,7 +378,7 @@ then
 fi
 }
 
-
+# perform trim adapter
 if [ -n "$outputdir" ]
 then
         if [ -n "$rnaseq_dir" ]
@@ -372,6 +387,7 @@ then
         else
                 echo -n ""
         fi
+	
         if [ -n "$srnaseq_dir" ]
         then
                 trim_srs
@@ -381,8 +397,9 @@ then
 fi
 
 ####################################################
-# align to genome 
+# Align to genome 
 ####################################################
+
 aligndir()
 {
 a=$(pwd)
@@ -397,7 +414,6 @@ then
 fi
 }
 
-
 # check hisat2 index 
 ls $refdir/*ht2 >/dev/null 2>&1
 if [[ $? -ne 0 ]]
@@ -407,7 +423,7 @@ fi
 
 align()
 {
-# align to genome through hisat2
+# align to genome by hisat2
 suffix=$(suff $1)
 case $2 in
 	TRUE | T)
@@ -462,10 +478,9 @@ then
 fi
 }
 
-
 his_rs_sam2bam()
 {
-# determine if the folder exists
+# check if the folder exists
 # if folders and files exist, start to process rna-seq hisat2 alignment
 cd $dir_b
 if [ -e ./rna ] && [ -d ./rna ]
@@ -492,7 +507,7 @@ fi
 
 his_srs_sam2bam()
 {
-# determine if the folder exists
+# check if the folder exists
 # if folders and files exist, start to process hisat2
 cd $dir_b
 if [ -e ./srna ] && [ -d ./srna ]
@@ -502,6 +517,7 @@ else
         echo "create dirctory $dir_b/srna"
         mkdir srna
 fi
+
 cd $dir
 suffix=$(suff $dir_co/srna)
 ls $dir_co/srna/*$suffix >/dev/null 2>&1
@@ -517,7 +533,7 @@ else
 fi
 }
 
-
+# perform hisat2 and samtools view
 if [ -n "$ref" ] && [ -n "$outputdir" ] 
 then
 	his_rs_sam2bam
@@ -529,6 +545,7 @@ fi
 ####################################################
 # merge bam  
 ####################################################
+
 merge_bam_pre()
 {
 ls $dir_b/rna/*bam >/dev/null 2>&1 && ls $dir_b/srna/*bam >/dev/null 2>&1
@@ -538,10 +555,12 @@ then
 	then
 		mkdir $dir_m/total
 	fi
+	
 	ls $dir_b/rna/*bam | while read id
 	do
 		cp -f $id $dir_m/total/$(basename $id ".bam")
 	done
+	
 	ls $dir_b/srna/*bam | while read id
         do
                 cp -f $id $dir_m/total/$(basename $id ".bam")
@@ -549,7 +568,7 @@ then
 fi
 }
 
-
+# perform bam merge
 if [ -n "$meta" ] && [ -n "$outputdir" ]
 then
 	merge_bam_pre
@@ -576,3 +595,6 @@ then
 		rm -r $dir_m/total
 	fi
 fi
+
+echo 
+## End
