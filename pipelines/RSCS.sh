@@ -74,9 +74,9 @@ name_s="small_RNA_seq"
 
 GETOPT_ARGS=`getopt -o hr:s:e:p:k:m:o: -al help,rnaseq_dir:,srnaseq_dir:,reference:,threads:,kmer:,meta_data:,outputdir:,single_or_pairedr:,single_or_paireds:, -- "$@"`
 eval set -- "$GETOPT_ARGS"
-while [ -n $1 ] 
+while [ -n "$1" ] 
 do
-	case $1 in
+	case "$1" in
 		-h | --help) 
 			usage
 			exit 1;;
