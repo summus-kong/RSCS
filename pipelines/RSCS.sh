@@ -23,30 +23,21 @@ usage: $sc <ARGUMENTS> [OPTIONS]
 
 ARGUMENTS:
 	-r --rnaseq_dir          RNA-seq dirctory,file format in this dirctory
-
         -s --srnaseq_dir         Small RNA-seq dirctory,file format in this dirctory
-
         -e --reference           The basename of the index for the reference genome. The basename is the name of any of the 
 				 index files up to but not including the final .1.ht2 / etc. hisat2 looks for the specified  
 				 index first in the current directory, then in the directory specified in the HISAT2_INDEX  
 				 environment variable
-	
 	--single_or_pairedr	 Logical value of RNA-seq[TRUE or FALSE]
-
-
-	--single_or_paireds	 Logical value of Small RNA-seq[TRUE or FALSE]
-
+	--sinle_or_paireds	 Logical value of Small RNA-seq[TRUE or FALSE]
 	-m --meta_data           Merge bam meta-data file,which is tab separate. file format:
                                                                                                 sample1         sample2     
                                                                                                 SRR2089677      SRR1200367    
                                                                                                 SRR1005345      SRR1234123    
-
         -o --outputdir           Output dirctory
 OPTIONS:
         -h --help                Show this message
-
 	-p --threads INT	 Number of input/output compression threads to use in addition to main thread. Default[1]
-
 	-k --kmer INT            It searches for at most <int> distinct, primary alignments for each read. Default[5]
 
 EOF
