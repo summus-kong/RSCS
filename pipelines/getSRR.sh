@@ -15,18 +15,19 @@ Usage: $gs -i <accession file> -o <outputdir> [-d -t -h]
 
 Options:
 	-i Input SRA Run accession begin with "SRR". Entries can be comma-delimited or individual
-
 	-o Output dirctory[Default: current dirctory]
-
 	-d Download data using wget or aspera. When the parameter is wget, use wget to download data;
 	   when the parameter is aspera, use  to download data[Default: wget]
-
 	-t Number of threads[INT]
-
 	-h Show this message
 
 EOF
 }
+
+if [[ $# -lt 1 ]]
+then
+	usage;exit 1
+fi
 
 # define input arguments
 
