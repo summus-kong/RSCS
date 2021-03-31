@@ -72,7 +72,7 @@ else
 fi
 
 # check bioinformatics software
-which bowtie2 > /dev/null && which samtools > /dev/null && which fastqc > /dev/null && which trim_galore > /dev/null && which hisat2 > /dev/null
+which samtools > /dev/null && which fastqc > /dev/null && which trim_galore > /dev/null && which hisat2 > /dev/null
 if [[ $? -eq 0 ]]
 then
 	echo "The RSCS environment appears to be already done"
@@ -81,42 +81,6 @@ else
 	echo "Create folder to install bioinformatics software"
 	mkdir ~/rscs_biosoft
 	softpath=$(echo `cd ~/rscs_biosoft;pwd`)
-fi
-
-###############Bowtie2###############
-
-installed=0
-which bowtie2 > /dev/null
-if [[ $? -eq 0 ]]
-then
-	echo "Bowtie2 Aligner has been installed"
-	installed=1
-fi
-
-if [[ installed -eq 0 ]]
-then
-	echo "Installing Bowtie2 ..."
-    	$get bowtie2-2.4.2-source.zip https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.4.2/bowtie2-2.4.2-source.zip/download
-	unzip bowtie2-2.4.2-source.zip
-    	cd bowtie2-2.4.2
-    	make
-	cd ..
-	mv bowtie2-2.4.2 ~/rscs_biosoft;mv bowtie2-2.4.2-source.zip ~/rscs_biosoft
-	echo "export PATH=$softpath/bowtie2-2.4.2/:$PATH" >> ~/.bashrsc
-	. ~/.bashrc
-	installed=0
-fi
-
-# test bowtie
-if [[ $installed -eq 0 ]]
-then
-	bowtie2 --version > /dev/null 2>&1
-	if [[ $? -eq 0 ]]
-	then
-		echo "Bowtie2 Aligner appears to be installed successfully"
-	else
-		echo "Bowtie2 Aligner NOT to be installed successfully"
-	fi
 fi
 
 ###############FastQC###############
