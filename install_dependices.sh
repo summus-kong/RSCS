@@ -72,7 +72,7 @@ else
 fi
 
 # check bioinformatics software
-which samtools > /dev/null && which fastqc > /dev/null && which trim_galore > /dev/null && which hisat2 > /dev/null
+which samtools > /dev/null && which fastqc > /dev/null && which multiqc > /dev/null && which trim_galore > /dev/null && which hisat2 > /dev/null
 if [[ $? -eq 0 ]]
 then
 	echo "The RSCS environment appears to be already done"
@@ -114,6 +114,41 @@ then
 	else
 		echo "FastQC NOT to be installed successfully"
 	fi
+fi
+
+###############Multiqc###############
+
+installed=0
+which multiqc > /dev/null
+if [[ $? -eq 0 ]]
+then
+        echo "Multiqc has been installed"
+        installed=1
+fi
+
+if [[ $installed -eq 0 ]]
+then
+        echo "Installing Multiqc ..."
+        current=`pwd`
+        cd ~/rscs_biosoft
+        $get master.zip https://github.com/ewels/MultiQC/archive/master.zip
+        unzip master.zip
+        cd MultiQC-master
+        pip install .
+        cd $current
+        installed=0
+fi
+
+# test fastqc
+if [[ installed -eq 0 ]]
+then
+        multiqc --version > /dev/null 2>&1
+        if [[ $? -eq 0 ]]
+        then
+                echo "Multiqc appears to be installed successfully"
+        else
+                echo "Multiqc NOT to be installed successfully"
+        fi
 fi
 
 ###############SAMtools###############
