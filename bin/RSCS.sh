@@ -39,6 +39,7 @@ OPTIONS:
         -h --help                Show this message
 	-p --threads INT	 Number of input/output compression threads to use in addition to main thread. Default[1]
 	-k --kmer INT            It searches for at most <int> distinct, primary alignments for each read. Default[5]
+	-v --version 		 show version
 
 "
 }
@@ -63,7 +64,7 @@ outputdir=
 name_r="RNA_seq"
 name_s="small_RNA_seq"
 
-GETOPT_ARGS=`getopt -o hr:s:e:p:k:m:o: -al help,rnaseq_dir:,srnaseq_dir:,reference:,threads:,kmer:,meta_data:,outputdir:,single_or_pairedr:,single_or_paireds:, -- "$@"`
+GETOPT_ARGS=`getopt -o hr:s:e:p:k:m:o:v -al help,rnaseq_dir:,srnaseq_dir:,reference:,threads:,kmer:,meta_data:,outputdir:,version,single_or_pairedr:,single_or_paireds:, -- "$@"`
 eval set -- "$GETOPT_ARGS"
 while [ -n "$1" ] 
 do
@@ -107,6 +108,9 @@ do
 		-o | --outputdir) 
 			outputdir=$2
 			shift 2;;
+		-v | --version)
+			echo "RSCS, version 1.0"
+			exit 1;;
 		--) 
 			shift 2
 			break;;
@@ -592,4 +596,3 @@ fi
 
 echo 
 ## End
-
