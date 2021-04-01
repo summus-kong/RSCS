@@ -49,7 +49,7 @@ else
 	version=`python --version 2>&1 | cut -d" " -f2 | cut -d"." -f1`
     	if [ $version == "3" ]
 	then
-		exit 0
+		echo
 	fi
     	if [[ $? -ne 0 ]]
     	then
