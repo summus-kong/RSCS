@@ -71,7 +71,7 @@ do
 	case "$1" in
 		-h | --help) 
 			usage
-			exit 1;;
+			exit;;
 
 		-r | --rnaseq_dir) 
 			rnaseq_dir=$2
@@ -110,7 +110,7 @@ do
 			shift 2;;
 		-v | --version)
 			echo "RSCS, version 1.0"
-			exit 1;;
+			exit;;
 		--) 
 			shift 2
 			break;;
