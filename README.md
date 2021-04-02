@@ -5,8 +5,8 @@ Here, we developed a computational pipeline that integrates RNA-seq and small RN
 # Install
 To install RSCS, be sure to have the appropriate rights and run :
 ```
-  tar -zxvf v1.0.tar.gz
-  cd RSCS-1.0
+  tar -zxvf v1.1.tar.gz
+  cd RSCS-1.1
   make
 ```
 # Example
