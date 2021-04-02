@@ -4,14 +4,14 @@ Here, we developed a computational pipeline that integrates RNA-seq and small RN
 
 # Install
 To install RSCS, be sure to have the appropriate rights and run :
-    ```
+```
     tar -zxvf v1.0.tar.gz
     cd RSCS-1.0
     make
-    ```
+```
 # Example
 Here is the help message:
-  ```
+```
   Description: RSCS:RNA-seq and small RNA-seq combined strategy,
                     a newly cpmputational pipeline to predict mouse transcripts.
 
@@ -36,6 +36,6 @@ Here is the help message:
           -p --threads INT         Number of input/output compression threads to use in addition to main thread. Default[1]
           -k --kmer INT            It searches for at most <int> distinct, primary alignments for each read. Default[5]
           -v --version             show version
-  ```     
+```     
 Please see the example folder for the specific RSCS example. 
   
