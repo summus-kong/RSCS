@@ -109,7 +109,7 @@ do
 			outputdir=$2
 			shift 2;;
 		-v | --version)
-			echo "RSCS, version 1.0"
+			echo "RSCS, version 1.1"
 			exit;;
 		--) 
 			shift 2
