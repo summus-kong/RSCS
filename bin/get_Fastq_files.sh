@@ -28,7 +28,7 @@ EOF
 
 if [[ $# -lt 1 ]]
 then
-	usage;exit 1
+	usage;exit
 fi
 
 # define input arguments
@@ -44,7 +44,7 @@ while [[ -n "$1" ]]
 do
 	case "$1" in 
 	-h) usage
-	    exit 1;;
+	    exit;;
 	-i) input=$2
 	    shift;;
 	-o) outdir=$2
@@ -261,9 +261,9 @@ if [[ -n "$d" ]]
 then
 
 	case "$d" in
-		wget) get_wFq;exit 1;;
-		aspera) get_aFq;exit 1;;
-		fqdump) get_dFq;exit 1;;
+		wget) get_wFq;exit;;
+		aspera) get_aFq;exit;;
+		fqdump) get_dFq;exit;;
 	esac
 fi
 
